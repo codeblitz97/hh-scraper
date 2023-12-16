@@ -2,6 +2,7 @@ const axios = require('axios').default;
 const uae = require('user-agent-array');
 const { load } = require('cheerio');
 const { BaseURL } = require('../config');
+const createError = require('http-errors');
 
 const ua = uae[(Math.random() * uae.length) | 0];
 
@@ -21,6 +22,11 @@ const searchData = async (page = 1, query = '') => {
     const response = await axios.get(`${url}`, {
       headers: { 'User-Agent': ua },
     });
+
+    if (!response || !response.data) {
+      throw createError(500, 'Failed to fetch data');
+    }
+
     const data = await response.data;
     const loadedCheerioData = load(data);
 
@@ -68,7 +74,7 @@ const searchData = async (page = 1, query = '') => {
     return results;
   } catch (error) {
     console.error(error);
-    return { message: '' };
+    throw createError(500, 'Internal Server Error');
   }
 };
 

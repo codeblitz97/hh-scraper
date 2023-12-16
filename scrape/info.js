@@ -2,6 +2,7 @@ const axios = require('axios').default;
 const userAgentArray = require('user-agent-array');
 const cheerio = require('cheerio');
 const config = require('../config');
+const createError = require('http-errors');
 const AxiosError = require('axios').AxiosError;
 
 const getInfo = async (id) => {
@@ -17,6 +18,11 @@ const getInfo = async (id) => {
     const response = await axios.get(url, {
       headers: { 'User-Agent': userAgent },
     });
+
+    if (!response || !response.data) {
+      throw createError(500, 'Failed to fetch data');
+    }
+
     const $ = cheerio.load(response.data);
 
     const title = $('div.post-title > h1').text().trim();
@@ -39,10 +45,15 @@ const getInfo = async (id) => {
       $,
       '.description-summary .summary__content p'
     );
+    const viewedCount = extractNumbersFromString(
+      getTextFromElement($, 'div.summary-content:contains("Total views")')
+    );
+
     const episodeCount = $('li.wp-manga-chapter').length;
 
     for (let i = 1; i <= episodeCount; i++) {
       const episodeId = `${id}/episode-${i}`;
+      const epTittle = `${title} Episode ${i}`;
 
       const releaseDates = $('.chapter-release-date i');
 
@@ -58,6 +69,7 @@ const getInfo = async (id) => {
           );
 
         const obj = {
+          episodeTitle: epTittle,
           episodeId,
           releaseDate,
           hentaiStreamId: hsId,
@@ -76,6 +88,7 @@ const getInfo = async (id) => {
       image,
       alternative,
       author,
+      viewedCount,
       genres,
       fapped,
       description,
@@ -89,10 +102,10 @@ const getInfo = async (id) => {
       const message = error.response
         ? error.response.statusText
         : 'An error occurred';
-      return { message, statusCode };
+      throw createError(statusCode, message);
     } else {
       console.error(error);
-      return { message: 'An error occurred', statusCode: 500 };
+      throw createError(500, 'Internal Server Error');
     }
   }
 };
@@ -116,8 +129,32 @@ function getFapped($) {
   return {
     average: parseFloat($('span#averagerate').text()) || null,
     best: parseFloat($('span[property="bestRating"]').text()) || null,
-    countrate: parseInt($('span#countrate').text(), 10) || null,
+    countrate: parseStringToNumber($('span#countrate').text()) || null,
   };
+}
+
+/**
+ * @param {string} s
+ */
+function parseStringToNumber(s) {
+  if (s.toLowerCase().endsWith('k')) {
+    return parseFloat(s.slice(0, -1)) * 1000;
+  } else {
+    return parseFloat(s);
+  }
+}
+
+/**
+ * @param {string} str
+ */
+function extractNumbersFromString(str) {
+  const numbersArray = str.match(/\d+/g);
+
+  if (numbersArray && numbersArray.length > 0) {
+    return parseInt(numbersArray[0], 10);
+  } else {
+    return null;
+  }
 }
 
 module.exports = { getInfo };
