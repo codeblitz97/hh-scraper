@@ -9,7 +9,9 @@ const { getTrendingMonth } = require('../scrape/trending');
 const recent = async (req, res, next) => {
   try {
     let { page } = req.query || 1;
-    const data = await getRecents(page);
+    let { limit } = req.query || 7;
+
+    const data = await getRecents(page, limit);
     res.json({ data });
   } catch (error) {
     next(createError(500, error.message));

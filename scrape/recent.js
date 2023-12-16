@@ -6,19 +6,21 @@ const createError = require('http-errors');
 
 const ua = uae[(Math.random() * uae.length) | 0];
 
-const getRecents = async (page) => {
+const getRecents = async (page = 1, limit = 7) => {
   let url;
   let info = [];
   const uniqueSet = new Set();
 
   try {
+    const startIndex = (page - 1) * limit;
+
     if (page <= 1) {
       url = `${BaseURL}/release/2023`;
     } else {
       url = `${BaseURL}/release/2023/page/${page}`;
     }
 
-    const response = await axios.get(`${url}`, {
+    const response = await axios.get(url, {
       headers: { 'User-Agent': ua },
     });
 
@@ -31,6 +33,7 @@ const getRecents = async (page) => {
     const element = loadedCheerioData(
       'body > div.wrap > div > div > div.c-page-content.style-1 > div > div > div > div.main-col.col-md-8.col-sm-8 > div > div.c-page > div > div.tab-content-wrap > div > div'
     );
+
     element.each((index, el) => {
       const divs = loadedCheerioData(el).find('div');
       divs.each((index, elm) => {
@@ -55,7 +58,7 @@ const getRecents = async (page) => {
             url: watchId,
           };
 
-          if (!uniqueSet.has(obj.id)) {
+          if (!uniqueSet.has(obj.id) && info.length < limit) {
             uniqueSet.add(obj.id);
             info.push(obj);
           }
