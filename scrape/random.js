@@ -45,7 +45,7 @@ const getRandom = async (page = 1, limit = 7) => {
 
         const match = bgImgSt.match(/url\('([^']+)'\)/);
 
-        const bgImage = match && match[1];
+        const bgImage = (match && match[1])?.replace(/\s/g, '%20');
         const hId = loadedCheerioData(elm).find('.acc_data > a').attr('href');
 
         const id = hId?.split('/watch/')[1].replace('/', '');

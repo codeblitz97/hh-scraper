@@ -39,7 +39,8 @@ async function getSeasons(season = currentSeason.toString()) {
     );
 
     items.each((index, item) => {
-      const image = $(item).find('.ah_cover').attr('src') || 'NA';
+      const image =
+        $(item).find('.ah_cover').attr('src')?.replace(/\s/g, '%20') || 'NA';
       const title = $(item).find('.ah_cover').attr('alt') || 'NA';
       const epLink = $(item).find('a').attr('href') || 'NA';
       const hLink =
@@ -47,7 +48,7 @@ async function getSeasons(season = currentSeason.toString()) {
       const bgImgElm = $(item).find('.acc_bg_image').attr('style') || 'NA';
       const id = hLink?.split('/watch/')[1].replace('/', '');
       const match = bgImgElm.match(/url\('([^']+)'\)/);
-      const bgImage = match && match[1];
+      const bgImage = (match && match[1])?.replace(/\s/g, '%20');
       const dateRelease = $(item).find('.acc_info > span').text().trim();
 
       scrapedData.push({
