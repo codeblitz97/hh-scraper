@@ -11,7 +11,7 @@ app.use(cors());
 app.use(helmet());
 
 const limiter = rateLimit({
-  max: 5,
+  max: 100,
   windowMs: 1 * 60 * 1000,
   message: {
     message: 'Too many requests from this IP, please try again later.',
