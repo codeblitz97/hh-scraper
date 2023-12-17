@@ -3,7 +3,6 @@ const {
   search,
   info,
   recent,
-  trendingMonth,
   tags,
   genres,
   uncensored,
@@ -12,6 +11,7 @@ const {
   softcore,
   random,
   seasons,
+  trending,
 } = require('../controllers/hentai');
 
 const router = Router();
@@ -19,7 +19,6 @@ const router = Router();
 router.get('/search', search);
 router.get('/info', info);
 router.get('/recent', recent);
-router.get('/trending-month', trendingMonth);
 router.get('/tags', tags);
 router.get('/genres', genres);
 router.get('/uncensored', uncensored);
@@ -28,5 +27,6 @@ router.get('/yuri', yuri);
 router.get('/softcore', softcore);
 router.get('/random', random);
 router.get('/seasons', seasons);
+router.get('/trending', trending);
 
 module.exports = router;
