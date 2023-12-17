@@ -20,10 +20,8 @@ function getSeason(month) {
 
 const currentMonth = new Date().getMonth() + 1;
 const currentSeason = `${getSeason(currentMonth)} 2023`;
-console.log(currentSeason);
 
 async function getSeasons(season = currentSeason.toString()) {
-  console.log('season = currentSeason.toString():', season);
   try {
     const response = await axios.get(`${BaseURL}/browse/seasons`, {
       headers: { 'User-Agent': ua },
