@@ -32,7 +32,7 @@ async function getSeasons(season = currentSeason.toString()) {
     const $ = cheerio.load(response.data);
 
     const scrapedData = [];
-    const accordionIndex = getAccordionIndexForSeason(season); // Define this function
+    const accordionIndex = getAccordionIndexForSeason(season);
 
     const items = $(
       `body > div.wrap > div > div > div.browse > div > div.accordions > div.brw_accordion:nth-child(${accordionIndex}) > div.accordion_collapse > div.accordion_h`
@@ -40,16 +40,19 @@ async function getSeasons(season = currentSeason.toString()) {
 
     items.each((index, item) => {
       const image = $(item).find('.ah_cover').attr('src') || 'NA';
+      const title = $(item).find('.ah_cover').attr('alt') || 'NA';
       const epLink = $(item).find('a').attr('href') || 'NA';
       const hLink =
         $(item).find('.acc_data > a:nth-child(1)').attr('href') || 'NA';
       const bgImgElm = $(item).find('.acc_bg_image').attr('style') || 'NA';
-
+      const id = hLink?.split('/watch/')[1].replace('/', '');
       const match = bgImgElm.match(/url\('([^']+)'\)/);
       const bgImage = match && match[1];
       const dateRelease = $(item).find('.acc_info > span').text().trim();
 
       scrapedData.push({
+        id,
+        title,
         image,
         hLink,
         epLink,
