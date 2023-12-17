@@ -20,7 +20,6 @@ This scraper operates through the integration of three distinct modules for send
 
 - **Fast:** Optimized for efficient performance.
 - **Low-sized:** Compact in size, minimizing resource utilization.
-
 - **Easy to Use:** User-friendly interface for straightforward operation.
 
 ## License
