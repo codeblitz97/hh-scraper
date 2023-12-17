@@ -5,6 +5,12 @@ const { searchData } = require('../scrape/search');
 const { getGenres } = require('../scrape/genres');
 const { getTags } = require('../scrape/tags');
 const { getTrendingMonth } = require('../scrape/trending');
+const { getUncensored } = require('../scrape/ucens');
+const { getFurry } = require('../scrape/furry');
+const { getYuri } = require('../scrape/yuri');
+const { getSoftcore } = require('../scrape/softcore');
+const { getRandom } = require('../scrape/random');
+const { getSeasons } = require('../scrape/seasons');
 
 const recent = async (req, res, next) => {
   try {
@@ -12,6 +18,18 @@ const recent = async (req, res, next) => {
     let { limit } = req.query || 7;
 
     const data = await getRecents(page, limit);
+    res.json({ data });
+  } catch (error) {
+    next(createError(500, error.message));
+  }
+};
+
+const random = async (req, res, next) => {
+  try {
+    let { page } = req.query || 1;
+    let { limit } = req.query || 7;
+
+    const data = await getRandom(page, limit);
     res.json({ data });
   } catch (error) {
     next(createError(500, error.message));
@@ -51,6 +69,54 @@ const genres = async (req, res, next) => {
   }
 };
 
+const uncensored = async (req, res, next) => {
+  try {
+    const { page } = req.query || 1;
+    const { limit } = req.query || 10;
+
+    const data = await getUncensored(page, limit);
+    res.send(data || 'No data');
+  } catch (error) {
+    next(createError(500, error.message));
+  }
+};
+
+const furry = async (req, res, next) => {
+  try {
+    const { page } = req.query || 1;
+    const { limit } = req.query || 10;
+
+    const data = await getFurry(page, limit);
+    res.send(data || 'No data');
+  } catch (error) {
+    next(createError(500, error.message));
+  }
+};
+
+const yuri = async (req, res, next) => {
+  try {
+    const { page } = req.query || 1;
+    const { limit } = req.query || 10;
+
+    const data = await getYuri(page, limit);
+    res.send(data || 'No data');
+  } catch (error) {
+    next(createError(500, error.message));
+  }
+};
+
+const softcore = async (req, res, next) => {
+  try {
+    const { page } = req.query || 1;
+    const { limit } = req.query || 10;
+
+    const data = await getSoftcore(page, limit);
+    res.send(data || 'No data');
+  } catch (error) {
+    next(createError(500, error.message));
+  }
+};
+
 const tags = async (req, res, next) => {
   try {
     const data = await getTags();
@@ -69,4 +135,27 @@ const trendingMonth = async (req, res, next) => {
   }
 };
 
-module.exports = { recent, info, trendingMonth, tags, genres, search };
+const seasons = async (req, res, next) => {
+  try {
+    const { season } = req.query;
+    const data = await getSeasons(season);
+    res.json({ data });
+  } catch (error) {
+    next(createError(500, 'Internal Server Error'));
+  }
+};
+
+module.exports = {
+  recent,
+  info,
+  trendingMonth,
+  tags,
+  genres,
+  search,
+  uncensored,
+  furry,
+  yuri,
+  softcore,
+  random,
+  seasons,
+};
