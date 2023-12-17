@@ -4,7 +4,7 @@ const { getInfo } = require('../scrape/info');
 const { searchData } = require('../scrape/search');
 const { getGenres } = require('../scrape/genres');
 const { getTags } = require('../scrape/tags');
-const { getTrendingMonth } = require('../scrape/trending');
+const { getTrending } = require('../scrape/trending');
 const { getUncensored } = require('../scrape/ucens');
 const { getFurry } = require('../scrape/furry');
 const { getYuri } = require('../scrape/yuri');
@@ -126,15 +126,6 @@ const tags = async (req, res, next) => {
   }
 };
 
-const trendingMonth = async (req, res, next) => {
-  try {
-    const data = await getTrendingMonth();
-    res.json({ data });
-  } catch (error) {
-    next(createError(500, 'Internal Server Error'));
-  }
-};
-
 const seasons = async (req, res, next) => {
   try {
     const { season } = req.query;
@@ -145,10 +136,19 @@ const seasons = async (req, res, next) => {
   }
 };
 
+const trending = async (req, res, next) => {
+  try {
+    const { type, page, limit } = req.query;
+    const data = await getTrending(page, limit, type);
+    res.json({ data });
+  } catch (error) {
+    next(createError(500, error.message));
+  }
+};
+
 module.exports = {
   recent,
   info,
-  trendingMonth,
   tags,
   genres,
   search,
@@ -158,4 +158,5 @@ module.exports = {
   softcore,
   random,
   seasons,
+  trending,
 };
