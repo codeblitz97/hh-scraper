@@ -11,6 +11,8 @@ const { getYuri } = require('../scrape/yuri');
 const { getSoftcore } = require('../scrape/softcore');
 const { getRandom } = require('../scrape/random');
 const { getSeasons } = require('../scrape/seasons');
+const { getGenresSearch } = require('../scrape/genresSeries');
+const { getTagsSearch } = require('../scrape/tagSeries');
 
 const recent = async (req, res, next) => {
   try {
@@ -146,6 +148,26 @@ const trending = async (req, res, next) => {
   }
 };
 
+const genreSearch = async (req, res, next) => {
+  try {
+    const { genre, page, limit } = req.query;
+    const data = await getGenresSearch(page, limit, genre);
+    res.json({ data });
+  } catch (error) {
+    next(createError(500, error.message));
+  }
+};
+
+const tagSearch = async (req, res, next) => {
+  try {
+    const { tag, page, limit } = req.query;
+    const data = await getTagsSearch(page, limit, tag);
+    res.json({ data });
+  } catch (error) {
+    next(createError(500, error.message));
+  }
+};
+
 module.exports = {
   recent,
   info,
@@ -159,4 +181,6 @@ module.exports = {
   random,
   seasons,
   trending,
+  genreSearch,
+  tagSearch,
 };
