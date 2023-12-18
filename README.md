@@ -25,3 +25,20 @@ This scraper operates through the integration of three distinct modules for send
 ## License
 
 This repository is licensed under the MIT License, making it an open-source project. Anyone is welcome to modify and enhance the code, creating their improved versions and subsequently publishing them.
+
+## Docs
+
+| Routes                   | Works                             | Parameters                                                     |
+| ------------------------ | --------------------------------- | -------------------------------------------------------------- |
+| /api/hentai/search       | Search for a Hentai               | q: `string`, page: `number`, limit: `number`                   |
+| /api/hentai/recent       | Get recently released Hentai      | page: `number`, limit: `number`                                |
+| /api/hentai/seasons      | Get season based Hentai           | season: `string`, page: `number`, limit: `number`              |
+| /api/hentai/random       | Get random Hentai                 | page: `number`, limit: `number`                                |
+| /api/hentai/softcore     | Get softcore Hentai               | page: `number`, limit: `number`                                |
+| /api/hentai/yuri         | Get yuri Hentai                   | page: `number`, limit: `number`                                |
+| /api/hentai/furry        | Get furry Hentai                  | page: `number`, limit: `number`                                |
+| /api/hentai/trending     | Get trending Hentai based on type | type: 'monthly' or 'all_time', page: `number`, limit: `number` |
+| /api/hentai/tags         | Get list of Hentai tags           | No parameters                                                  |
+| /api/hentai/genres       | Get list of Hentai genres         | No parameters                                                  |
+| /api/hentai/genre-search | Search for Hentai by genre        | genre: `string`                                                |
+| /api/hentai/tag-search   | Search for Hentai by tag          | tag: `string`                                                  |
