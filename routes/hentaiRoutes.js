@@ -14,6 +14,7 @@ const {
   trending,
   genreSearch,
   tagSearch,
+  studio,
 } = require('../controllers/hentai');
 
 const router = Router();
@@ -32,5 +33,6 @@ router.get('/seasons', seasons);
 router.get('/trending', trending);
 router.get('/genre-search', genreSearch);
 router.get('/tag-search', tagSearch);
+router.get('/studio', studio);
 
 module.exports = router;
